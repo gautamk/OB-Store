@@ -11,7 +11,15 @@
         <style type="text/css">
             body {
                 padding: 60px;
-                
+
+            }
+            #LoginForm input{
+                display: block;
+                height: 50px;
+                font-size: 25px;
+            }
+            #LoginForm button{
+                font-size: 35px;
             }
 
         </style>
@@ -36,7 +44,7 @@
 
     </head>
     <body>
-        
+
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -48,8 +56,8 @@
                     <a class="brand" href="#">OBStore</a>
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li class="active"><a href="<%= contextPath%>">Home</a></li>
-                            <li><a href="<%= contextPath %>/login.jsp">Login</a></li>
+                            <li ><a href="<%= contextPath%>">Home</a></li>
+                            <li class="active"><a href="<%= contextPath%>/login.jsp">Login</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -59,38 +67,25 @@
         <div class="container">
 
             <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="hero-unit">
-                <h1>New Arrivals</h1>
+            <div class="hero-unit span5">
+                <h1>Login</h1>
                 <p>
-
+                <form id="LoginForm" class="form-vertical" action="<%= contextPath%>/login" method="post">
+                    <input type="email" class="span5" name="email" placeholder="Email ID" />
+                    <input type="password" class="span5" name="password" placeholder="Password" />
+                    <button type="submit"  class="pull-right btn btn-success btn-large " >Login</button>
+                </form>
                 </p>
-                <p><a class="btn btn-primary btn-large">Buy Books &raquo;</a></p>
             </div>
 
             <!-- Example row of columns -->
-            <div class="row">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-            </div>
 
-            <hr>
 
-            <footer>
-                <p>&copy; OBStore 2012</p>
-            </footer>
+
+            
 
         </div> <!-- /container -->
+        <footer>
+                <p>&copy; OBStore 2012</p>
+        </footer>
 </html>
