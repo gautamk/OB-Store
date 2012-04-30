@@ -1,3 +1,6 @@
+<%@page import="model.Books"%>
+<%@page import="java.util.List"%>
+<%@page import="model.dao.BooksDAO"%>
 <%@page import="model.Users"%>
 <%@page import="controller.Login"%>
 <!DOCTYPE html>
@@ -64,39 +67,24 @@
                 </div>
             </div>
         </div>
-
+        <div class="row">
         <div class="container">
-
-            <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="hero-unit">
-                <h1>New Arrivals</h1>
+            <% 
+                List<Books> books = BooksDAO.getRandomBooks(6);
+                for(Books book:books){
+            %>
+            <div class="span4">
+                <h2><%= book.getName() %></h2>
+                <h4>Rs.<%= book.getPrice() %>/-</h4>
                 <p>
-
+                    <%= book.getDescription() %>
                 </p>
-                <p><a class="btn btn-primary btn-large">Buy Books &raquo;</a></p>
+                <p>
+                    <a href="#" class="btn btn-success" >View and Buy &rArr;</a>
+                </p>
             </div>
-
-            <!-- Example row of columns -->
-            <div class="row">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-            </div>
-
-            <hr>
-
+            <% } %>
+        </div>
             <footer>
                 <p>&copy; OBStore 2012</p>
             </footer>

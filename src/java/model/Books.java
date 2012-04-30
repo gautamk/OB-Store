@@ -23,6 +23,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Books.findByName", query = "SELECT b FROM Books b WHERE b.name = :name"),
     @NamedQuery(name = "Books.findByPrice", query = "SELECT b FROM Books b WHERE b.price = :price")})
 public class Books implements Serializable {
+    @Size(max = 300)
+    @Column(name = "DESCRIPTION")
+    private String description;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,6 +100,14 @@ public class Books implements Serializable {
     @Override
     public String toString() {
         return "model.Books[ id=" + id + " ]";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
 }
