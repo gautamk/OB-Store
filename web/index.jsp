@@ -70,17 +70,17 @@
         <div class="row">
         <div class="container">
             <% 
-                List<Books> books = BooksDAO.getRandomBooks(6);
+                List<Books> books = BooksDAO.getRandomBooks(4);
                 for(Books book:books){
             %>
-            <div class="span4">
+            <div class="span4 ">
                 <h2><%= book.getName() %></h2>
-                <h4>Rs.<%= book.getPrice() %>/-</h4>
+                <h4><span class="badge badge-success">Rs.<%= book.getPrice() %>/-</span></h4>
                 <p>
                     <%= book.getDescription() %>
                 </p>
                 <p>
-                    <a href="#" class="btn btn-success" >View and Buy &rArr;</a>
+                    <a href="#" class="btn btn-primary" >View and Buy &rArr;</a>
                 </p>
             </div>
             <% } %>
