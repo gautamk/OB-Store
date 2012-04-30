@@ -5,18 +5,46 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import model.Users;
+import model.dao.UserDAO;
 
 /**
  *
  * @author gautam
  */
 public class Login extends HttpServlet {
-
+    /**
+     * Denotes key that contains the errors 
+     * during login in the HTTP SESSION. 
+     */
+    public static final String LOGIN_ERRORS_SESSION_KEY = "login_errors";
+    
+    public static final String USER_SESSION_KEY = "user";
+    
+    public static boolean isLoggedIn(HttpSession session){
+        if(session.getAttribute(USER_SESSION_KEY) == null)
+            return false;
+        return true;
+    }
+    
+    public static  boolean loginUser(Users user,HttpSession session){
+        if (UserDAO.authenticate(user)) {
+            session.setAttribute(USER_SESSION_KEY, user);
+            return true;
+        }
+        session.setAttribute(LOGIN_ERRORS_SESSION_KEY, "Invalid Username or Password");
+        return false;
+    }
+    
+    public static void logoutUser(HttpSession session){
+        session.setAttribute(USER_SESSION_KEY, null);
+    }
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -30,21 +58,12 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            /*
-             * TODO output your page here. You may use following sample code.
-             */
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Login</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        } finally {            
-            out.close();
+        Users user = new Users(request.getParameter("email"), request.getParameter("password"));
+        HttpSession session = request.getSession();
+        if (loginUser(user, session)) {
+            response.sendRedirect(request.getContextPath());
+        }else{            
+            response.sendRedirect(request.getContextPath()+"/login.jsp");
         }
     }
 
@@ -61,7 +80,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath()+"/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 
     /**

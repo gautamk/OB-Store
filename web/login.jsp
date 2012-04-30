@@ -1,3 +1,5 @@
+<%@page import="controller.Login"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,7 +7,9 @@
         <%
             ServletContext context = getServletContext();
             String contextPath = context.getContextPath();
-
+            if (Login.isLoggedIn(session)) {
+                response.sendRedirect(contextPath);
+            }
         %>
         <link rel="stylesheet" href="<%= contextPath%>/assets/css/bootstrap.min.css" />
         <style type="text/css">
@@ -70,6 +74,16 @@
             <div class="hero-unit span5">
                 <h1>Login</h1>
                 <p>
+                    <%
+                        if (session.getAttribute(Login.LOGIN_ERRORS_SESSION_KEY) != null) {%>
+                <div class="alert alert-block alert-error">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Error !</h4>
+                    <%= session.getAttribute(Login.LOGIN_ERRORS_SESSION_KEY)%>
+                </div>
+                <% }
+                    session.setAttribute(Login.LOGIN_ERRORS_SESSION_KEY, null);
+                %>
                 <form id="LoginForm" class="form-vertical" action="<%= contextPath%>/login" method="post">
                     <input type="email" class="span5" name="email" placeholder="Email ID" />
                     <input type="password" class="span5" name="password" placeholder="Password" />
@@ -82,10 +96,10 @@
 
 
 
-            
+
 
         </div> <!-- /container -->
         <footer>
-                <p>&copy; OBStore 2012</p>
+            <p>&copy; OBStore 2012</p>
         </footer>
 </html>

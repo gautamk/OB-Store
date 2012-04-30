@@ -1,3 +1,5 @@
+<%@page import="model.Users"%>
+<%@page import="controller.Login"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -49,7 +51,14 @@
                     <div class="nav-collapse">
                         <ul class="nav">
                             <li class="active"><a href="<%= contextPath%>">Home</a></li>
-                            <li><a href="<%= contextPath %>/login.jsp">Login</a></li>
+                            <% if(Login.isLoggedIn(session)) { 
+                                Users user = (Users) session.getAttribute(Login.USER_SESSION_KEY) ;
+                             %>
+                                <li><a href="<%= contextPath %>/logout.jsp">Logout from <%= user.getEmail() %></a></li>
+                            <% } else { %>
+                                <li><a href="<%= contextPath %>/login.jsp">Login</a></li>
+                            <% } %>
+                            
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
