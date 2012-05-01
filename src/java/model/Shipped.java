@@ -27,6 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Shipped.findByTimestamp", query = "SELECT s FROM Shipped s WHERE s.timestamp = :timestamp"),
     @NamedQuery(name = "Shipped.findByStatus", query = "SELECT s FROM Shipped s WHERE s.status = :status")})
 public class Shipped implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,11 +48,6 @@ public class Shipped implements Serializable {
     private String address;
     @Column(name = "PHONE")
     private Integer phone;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
@@ -99,14 +99,6 @@ public class Shipped implements Serializable {
         this.phone = phone;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -138,6 +130,14 @@ public class Shipped implements Serializable {
     @Override
     public String toString() {
         return "model.Shipped[ id=" + id + " ]";
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
     
 }

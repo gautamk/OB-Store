@@ -1,6 +1,4 @@
-<%@page import="java.util.Iterator"%>
 <%@page import="model.Books"%>
-<%@page import="java.util.List"%>
 <%@page import="model.dao.BooksDAO"%>
 <%@page import="model.Users"%>
 <%@page import="controller.Login"%>
@@ -8,16 +6,24 @@
 <html>
     <head>
         <!-- Copy to all pages -->
-        <%
+        <%  
             ServletContext context = getServletContext();
             String contextPath = context.getContextPath();
-
+            int bookid=0;
+            try{
+                bookid = Integer.parseInt(request.getParameter("bookid"));            
+            }catch(NumberFormatException e){
+                response.sendRedirect(contextPath);
+            }
+            Books book = BooksDAO.getBook(bookid);
+            if(book == null){
+                response.sendError(response.SC_NOT_FOUND, "The requested book was not found ");
+            }
         %>
         <link rel="stylesheet" href="<%= contextPath%>/assets/css/bootstrap.min.css" />
         <style type="text/css">
             body {
                 padding: 60px;
-
             }
 
         </style>
@@ -54,60 +60,37 @@
                     <a class="brand" href="#">OBStore</a>
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li class="active"><a href="<%= contextPath%>">Home</a></li>
+                            <li ><a href="<%= contextPath%>">Home</a></li>
+                            <li class="active"><a href="#">View</a></li>
                         </ul>
-                        <%-- LOGIN --%>
-                        <ul class="nav pull-right">
-                            <% if (Login.isLoggedIn(session)) {
-                                    Users user = (Users) session.getAttribute(Login.USER_SESSION_KEY);
-                            %>
-                            <li  ><a href="<%= contextPath%>/logout.jsp">Logout from <%= user.getEmail()%></a></li>
-                            <% } else {%>
-                            <li  ><a href="<%= contextPath%>/login.jsp">Login</a></li>
-                            <% }%>
-                        </ul><%-- /LOGIN --%>
-                    </div><!--/.nav-collapse -->
+                    <%-- LOGIN --%>
+                    <ul class="nav pull-right">
+                    <% if (Login.isLoggedIn(session)) {
+                            Users user = (Users) session.getAttribute(Login.USER_SESSION_KEY);
+                    %>
+                    <li  ><a href="<%= contextPath%>/logout.jsp">Logout from <%= user.getEmail()%></a></li>
+                    <% } else {%>
+                    <li  ><a href="<%= contextPath%>/login.jsp">Login</a></li>
+                    <% }%>
+                    </ul><%-- /LOGIN --%>
+                     </div><!--/.nav-collapse -->
                 </div>
+            </div>
+        </div><!--/.navbar -->
+        
+        <div class="container">
+            <div class="hero-unit">
+                <h1><%= book.getName() %>
+                    <small >Rs.<%= book.getPrice() %>/-</small>
+                </h1>
+                <p>
+                    <%= book.getDescription() %>
+                </p>
+                <p>
+                    <a href="#" class="btn btn-primary btn-large pull-right">Buy <i class="icon-shopping-cart icon-white"></i></a>
+                </p>
             </div>
         </div>
-
-        <div class="container">
-            <style>
-                .book-container{
-                    margin: 25px;
-                    padding:25px;
-                    border-radius: 10px;
-                    background-color:whitesmoke;
-                }
-            </style>
-            <div id="books-container">
-                <h1>
-                    Featured Books
-                </h1>
-                <%
-                    List<Books> books = BooksDAO.getRandomBooks(6);
-                    Iterator iterator = books.iterator();
-                    for (int i = 2; iterator.hasNext(); i++) {
-                        Books book = (Books) iterator.next();
-                %>
-                <div class="span3 book-container" >
-                    <h2><%= book.getName()%></h2>
-                    <h4><span class="badge badge-success">Rs.<%= book.getPrice()%>/-</span></h4>
-                    <p>
-                        <%= book.getDescription().substring(0, 70)%>...
-                    </p>
-                    <p>
-                        <a href="<%= contextPath %>/view?bookid=<%= book.getId() %>"
-                           class="btn btn-primary pull-right"
-                           >View <i class="icon-eye-open icon-white"></i></a>
-                    </p>
-                </div>
-                <% }%>
-            </div>
-        </div> <!-- /container -->
-
-        <footer>
-            <p>&copy; OBStore 2012</p>
-        </footer>
+        
     </body>
 </html>
