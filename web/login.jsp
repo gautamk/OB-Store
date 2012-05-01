@@ -1,3 +1,5 @@
+<%@page import="java.text.Normalizer.Form"%>
+<%@page import="controller.Register"%>
 <%@page import="model.Users"%>
 <%@page import="controller.Login"%>
 
@@ -114,17 +116,29 @@
                 </p>
             </div>
             <div class="hero-unit span4">
-                <h1>Register</h1>                  
+                <h1>Register</h1> 
+                <%
+                    String register_errors =(String) session.getAttribute(Register.REGISTER_ERROR_SESSION_KEY);
+                    session.setAttribute(Register.REGISTER_ERROR_SESSION_KEY, null);
+                    if (register_errors != null) {
+                %>
+                <div class="alert alert-block alert-error" >
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <h4 class="alert-heading">Error !</h4>
+                    <%= register_errors%>
+                </div>
+                <% } %>
                 <p>
-                <form id="RegisterForm" class="span4" method="post" action="<%= contextPath %>/register" >
-                    <input type="email" class="span4" placeholder="Your email address" name="email" required />
+                   
+                <form id="RegisterForm" class="span4" method="post" action="<%= contextPath%>/register" >
+                    <input type="email"  class="span4" placeholder="Your email address" name="email" required />
                     <input type="password" class="span4" name="password" placeholder="The password you wish to have" required/>
                     <textarea type="address" class="span4" name="address" placeholder="Your Shipping address" required= ></textarea>
-                    <input type="number" class="span4" name="phone" placeholder="Your contact number" required/>
+                    <input type="number" class="span4" name="phone" placeholder="Your contact number"  required/>
                     <button type="submit" class="pull-right btn btn-primary btn-large" >Register</button>
                 </form>
                 </p>
-                
+
             </div>
 
             <!-- Example row of columns -->

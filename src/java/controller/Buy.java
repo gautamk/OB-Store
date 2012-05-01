@@ -5,38 +5,20 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import model.Books;
 import model.Users;
-import model.dao.UserDAO;
+import model.dao.BooksDAO;
+import model.dao.ShippingDAO;
 
 /**
  *
  * @author gautam
  */
-public class Register extends HttpServlet {
-
-    public static final String REGISTER_ERROR_SESSION_KEY = "register_errors";
-    public static final String FORM_DATA_KEY = "form_data";
-
-    public static boolean registerUser(
-            Users user, HttpSession session) {
-        try {
-            UserDAO.register(user);
-        } catch (SQLException ex) {
-            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-            session.setAttribute(REGISTER_ERROR_SESSION_KEY, "Email already in use, Please choose a different one");
-            return false;
-        }
-        return true;
-    }
+public class Buy extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -50,21 +32,20 @@ public class Register extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
         try {
-            Users user = new Users(
-                    request.getParameter("email"),
-                    request.getParameter("password"),
-                    request.getParameter("address"),
-                    request.getParameter("phone"));
-            registerUser(user, request.getSession());
-            request.getSession().setAttribute(FORM_DATA_KEY, user);
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-        } catch(IllegalArgumentException e){
-            request.getSession().setAttribute(Register.REGISTER_ERROR_SESSION_KEY, e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-        } finally {
+            String email = request.getParameter("email");
+            String address = request.getParameter("address");
+            int phone = Integer.parseInt(request.getParameter("phone"));
+            int bookid = Integer.parseInt(request.getParameter("bookid"));
+            Books book = BooksDAO.getBook(bookid);
+            Users user = new Users();
+            user.setAddress(address);
+            user.setEmail(email);
+            user.setPhone(phone);
+            ShippingDAO.shipBook(book, user);
+            
+        } finally {            
+
         }
     }
 
@@ -81,7 +62,7 @@ public class Register extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        response.sendRedirect(request.getContextPath());
     }
 
     /**

@@ -57,8 +57,12 @@ public class Login extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        Users user = new Users(request.getParameter("email"), request.getParameter("password"));
+        Users user = null;
+        try{
+        user = new Users(request.getParameter("email"), request.getParameter("password"));
+        } catch(IllegalArgumentException e){
+            request.getSession().setAttribute(LOGIN_ERRORS_SESSION_KEY, e.getMessage());
+        }
         HttpSession session = request.getSession();
         if (loginUser(user, session)) {
             response.sendRedirect(request.getContextPath());

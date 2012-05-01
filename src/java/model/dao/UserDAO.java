@@ -89,6 +89,8 @@ public class UserDAO {
                 preparedStatement.close();
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e){
+                
             }
         }
         return authentication;
