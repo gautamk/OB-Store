@@ -14,10 +14,13 @@
                 bookid = Integer.parseInt(request.getParameter("bookid"));            
             }catch(NumberFormatException e){
                 response.sendRedirect(contextPath);
+                return;
             }
-            Books book = BooksDAO.getBook(bookid);
+            Books book = null;
+            book = BooksDAO.getBook(bookid);
             if(book == null){
                 response.sendError(response.SC_NOT_FOUND, "The requested book was not found ");
+                return;
             }
         %>
         <link rel="stylesheet" href="<%= contextPath%>/assets/css/bootstrap.min.css" />

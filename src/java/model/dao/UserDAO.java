@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import model.Users;
 
@@ -20,18 +21,42 @@ import model.Users;
  * @author gautam
  */
 public class UserDAO {
-    public UserDAO(){
-        
+
+    public UserDAO() {
     }
-    public static boolean authenticate(Users user){
+
+    public static void register(Users user) throws SQLException {
+        DataSource dataSource;
+        Connection connection;
+        PreparedStatement preparedStatement ;
+        final String INSERT_QUERY = "INSERT INTO OBS.USERS (EMAIL, PASSWORD, ADDRESS, PHONE) "
+                + "VALUES (?, ?, ?, ?)";
+        ResultSet results = null;
+        int num_of_rows = 0;
+        try{
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup("obs");
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(INSERT_QUERY);
+            preparedStatement.setString(1,user.getEmail());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getAddress());
+            preparedStatement.setInt(4, user.getPhone());
+            preparedStatement.executeQuery();
+        } catch (NamingException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+    }
+
+    public static boolean authenticate(Users user) {
         DataSource dataSource;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        String RETRIEVE_QUERY = "SELECT EMAIL FROM OBS.USERS WHERE EMAIL=? AND PASSWORD=? ";
-        ResultSet results = null ;
-        int num_of_rows=0;
+        final String RETRIEVE_QUERY = "SELECT EMAIL FROM OBS.USERS WHERE EMAIL=? AND PASSWORD=? ";
+        ResultSet results = null;
+        int num_of_rows = 0;
         boolean authentication = true;
-        try{
+        try {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup("obs");
             connection = dataSource.getConnection();
@@ -39,29 +64,25 @@ public class UserDAO {
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
             results = preparedStatement.executeQuery();
-            while (results.next()){
+            while (results.next()) {
                 String email = results.getString("EMAIL");
                 num_of_rows++;
             }
-            if(num_of_rows>1){
+            if (num_of_rows > 1) {
                 throw new SQLException("Too many rows returned");
-            }
-            else if (num_of_rows<1){
+            } else if (num_of_rows < 1) {
                 throw new IllegalAccessException("Username or password is wrong");
             }
-            
-        }
-        catch(SQLException e){
+
+        } catch (SQLException e) {
             authentication = false;
             e.printStackTrace();
-        }
-        catch(IllegalAccessException e){
-            authentication=false;
-        }
-        catch(Exception e){
+        } catch (IllegalAccessException e) {
+            authentication = false;
+        } catch (Exception e) {
             authentication = false;
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 results.close();
                 connection.close();
@@ -72,5 +93,4 @@ public class UserDAO {
         }
         return authentication;
     }
-    
 }

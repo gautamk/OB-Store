@@ -26,6 +26,18 @@
             #LoginForm button{
                 font-size: 35px;
             }
+            #RegisterForm input {
+                display: block;
+                height: 30px;
+                font-size: 20px;
+            }
+            #RegisterForm textarea{
+                height: 50px;
+                font-size: 20px;
+            }
+            #RegisterForm button{
+                font-size: 35px;
+            }
 
         </style>
         <link rel="stylesheet" href="<%= contextPath%>/assets/css/bootstrap-responsive.min.css" />
@@ -81,7 +93,7 @@
         <div class="container">
 
             <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="hero-unit span5">
+            <div class="hero-unit span4">
                 <h1>Login</h1>
                 <p>
                     <%
@@ -95,11 +107,24 @@
                     session.setAttribute(Login.LOGIN_ERRORS_SESSION_KEY, null);
                 %>
                 <form id="LoginForm" class="form-vertical" action="<%= contextPath%>/login" method="post">
-                    <input type="email" class="span5" name="email" placeholder="Email ID" />
-                    <input type="password" class="span5" name="password" placeholder="Password" />
+                    <input type="email" class="span4" name="email" placeholder="Email ID" />
+                    <input type="password" class="span4" name="password" placeholder="Password" />
                     <button type="submit"  class="pull-right btn btn-success btn-large " >Login</button>
                 </form>
                 </p>
+            </div>
+            <div class="hero-unit span4">
+                <h1>Register</h1>                  
+                <p>
+                <form id="RegisterForm" class="span4" method="post" action="<%= contextPath %>/register" >
+                    <input type="email" class="span4" placeholder="Your email address" name="email" required />
+                    <input type="password" class="span4" name="password" placeholder="The password you wish to have" required/>
+                    <textarea type="address" class="span4" name="address" placeholder="Your Shipping address" required= ></textarea>
+                    <input type="number" class="span4" name="phone" placeholder="Your contact number" required/>
+                    <button type="submit" class="pull-right btn btn-primary btn-large" >Register</button>
+                </form>
+                </p>
+                
             </div>
 
             <!-- Example row of columns -->

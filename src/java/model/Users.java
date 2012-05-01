@@ -6,9 +6,11 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import libraries.Validation;
 
 /**
  *
@@ -24,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Users.findByAddress", query = "SELECT u FROM Users u WHERE u.address = :address"),
     @NamedQuery(name = "Users.findByPhone", query = "SELECT u FROM Users u WHERE u.phone = :phone")})
 public class Users implements Serializable {
+
     private static final long serialVersionUID = 1L;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
@@ -50,25 +53,40 @@ public class Users implements Serializable {
         this.email = email;
     }
 
-    public Users(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public Users(String email, String password)throws IllegalArgumentException {
+        this.setEmail(email);
+        this.setPassword(password);
+    }
+    
+    public Users(String email,String password,String address,String phone)throws IllegalArgumentException, NumberFormatException{
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setAddress(address);        
+        this.setPhone(phone);
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String email)throws IllegalArgumentException {
+        if (Validation.isValidEmail(email)) {
+            this.email = email;
+        }else{
+            throw new IllegalArgumentException("Invalid Email address");
+        }
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String password) throws IllegalArgumentException{
+        if (Validation.isValidPassword(password)){
+            this.password = password;
+        }else{
+            throw new IllegalArgumentException("Password must be atleast 6 characters long");
+        }
     }
 
     public String getAddress() {
@@ -85,6 +103,10 @@ public class Users implements Serializable {
 
     public void setPhone(Integer phone) {
         this.phone = phone;
+    }
+
+    public void setPhone(String phone)throws NumberFormatException {
+        this.setPhone(Integer.parseInt(phone));
     }
 
     @Override
@@ -111,5 +133,4 @@ public class Users implements Serializable {
     public String toString() {
         return "model.Users[ email=" + email + " ]";
     }
-    
 }

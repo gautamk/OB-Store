@@ -10,6 +10,10 @@
         <servlet-name>view</servlet-name>
         <jsp-file>/view.jsp</jsp-file>
     </servlet>
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>controller.Register</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -17,6 +21,10 @@
     <servlet-mapping>
         <servlet-name>view</servlet-name>
         <url-pattern>/view</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
