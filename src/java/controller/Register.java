@@ -53,7 +53,14 @@ public class Register extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            Users user = new Users(email,password,address,phone);
+            Users user = new Users(
+                    request.getParameter("email"),
+                    request.getParameter("password"),
+                    request.getParameter("address"),
+                    request.getParameter("phone"));
+            if(registerUser(user, request.getSession())){
+                response.sendRedirect(request.getContextPath()+"/login.jsp");
+            }
         } finally {            
             out.close();
         }

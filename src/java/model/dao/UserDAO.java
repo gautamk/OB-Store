@@ -42,7 +42,7 @@ public class UserDAO {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getAddress());
             preparedStatement.setInt(4, user.getPhone());
-            preparedStatement.executeQuery();
+            preparedStatement.execute();
         } catch (NamingException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }    
