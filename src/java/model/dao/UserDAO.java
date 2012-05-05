@@ -28,31 +28,57 @@ public class UserDAO {
     public static void register(Users user) throws SQLException {
         DataSource dataSource;
         Connection connection;
-        PreparedStatement preparedStatement ;
+        PreparedStatement preparedStatement;
         final String INSERT_QUERY = "INSERT INTO OBS.USERS (EMAIL, PASSWORD, ADDRESS, PHONE) "
                 + "VALUES (?, ?, ?, ?)";
         ResultSet results = null;
         int num_of_rows = 0;
-        try{
+        try {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup("obs");
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(INSERT_QUERY);
-            preparedStatement.setString(1,user.getEmail());
+            preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getAddress());
             preparedStatement.setString(4, user.getPhone());
             preparedStatement.execute();
         } catch (NamingException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }    
+        }
+    }
+
+    public static Users getUser(String email, String password) {
+        DataSource dataSource;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        final String RETRIEVE_QUERY = "SELECT * FROM OBS.USERS WHERE EMAIL=? AND PASSWORD=? ";
+        ResultSet results = null;
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup("obs");
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(RETRIEVE_QUERY);
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            results = preparedStatement.executeQuery();
+            results.next();
+            return new Users(results.getString("EMAIL"), null,
+                    results.getString("ADDRESS"),results.getString("PHONE"));
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public static boolean authenticate(Users user) {
         DataSource dataSource;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        final String RETRIEVE_QUERY = "SELECT EMAIL FROM OBS.USERS WHERE EMAIL=? AND PASSWORD=? ";
+        final String RETRIEVE_QUERY = "SELECT * FROM OBS.USERS WHERE EMAIL=? AND PASSWORD=? ";
         ResultSet results = null;
         int num_of_rows = 0;
         boolean authentication = true;
@@ -89,8 +115,7 @@ public class UserDAO {
                 preparedStatement.close();
             } catch (SQLException ex) {
                 Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception e){
-                
+            } catch (Exception e) {
             }
         }
         return authentication;

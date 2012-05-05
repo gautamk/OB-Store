@@ -35,6 +35,7 @@ public class Login extends HttpServlet {
     
     public static  boolean loginUser(Users user,HttpSession session){
         if (UserDAO.authenticate(user)) {
+            user = UserDAO.getUser(user.getEmail(),user.getPassword());
             session.setAttribute(USER_SESSION_KEY, user);
             return true;
         }

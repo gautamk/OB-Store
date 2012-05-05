@@ -80,6 +80,9 @@ public class  Users implements Serializable {
     }
 
     public void setPassword(String password) {
+        if(password==null){
+            return;
+        }
         if(!Validation.isValidPassword(password)){
             throw new IllegalArgumentException("Password must be atleast 6 characters long");
         }
