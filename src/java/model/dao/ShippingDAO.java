@@ -4,10 +4,7 @@
  */
 package model.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -45,7 +42,7 @@ public class ShippingDAO {
             status = new Shipped(ID);
             status.setEmail(result.getString("EMAIL"));
             status.setAddress(result.getString("ADDRESS"));
-            status.setPhone(result.getInt("PHONE"));
+            status.setPhone(result.getString("PHONE"));
             status.setStatus(result.getString("STATUS"));
             status.setTimestamp(result.getTime("TIMESTAMP"));
             status.setBookid(result.getInt("BOOKID"));
@@ -56,7 +53,7 @@ public class ShippingDAO {
         return null;
     }
 
-    public static void shipBook(Books book, Users user) {
+    public static String shipBook(Books book, Users user) {
         DataSource dataSource;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -67,13 +64,17 @@ public class ShippingDAO {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup("obs");
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement(INSERT_QUERY);
+            preparedStatement = connection.prepareStatement(INSERT_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getAddress());
-            preparedStatement.setInt(3, user.getPhone());
+            preparedStatement.setString(3, user.getPhone());
             preparedStatement.setString(4, DEFAULT_SHIPPING_STATUS);
             preparedStatement.setInt(5, book.getId());
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
+            ResultSet keys = preparedStatement.getGeneratedKeys();
+            keys.next();
+            return keys.getString(1);
+
 
         } catch (SQLException ex) {
             Logger.getLogger(ShippingDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,5 +88,6 @@ public class ShippingDAO {
                 Logger.getLogger(ShippingDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return null;
     }
 }

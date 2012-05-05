@@ -5,6 +5,7 @@
 package controller;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,14 +36,17 @@ public class Buy extends HttpServlet {
         try {
             String email = request.getParameter("email");
             String address = request.getParameter("address");
-            int phone = Integer.parseInt(request.getParameter("phone"));
+            String phone = request.getParameter("phone");
             int bookid = Integer.parseInt(request.getParameter("bookid"));
             Books book = BooksDAO.getBook(bookid);
             Users user = new Users();
             user.setAddress(address);
             user.setEmail(email);
             user.setPhone(phone);
-            ShippingDAO.shipBook(book, user);
+            String ShippingID = ShippingDAO.shipBook(book, user);
+            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/bought");
+            request.setAttribute("ShippingID", ShippingID);
+            dispatcher.forward(request, response);
             
         } finally {            
 

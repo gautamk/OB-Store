@@ -41,7 +41,7 @@ public class UserDAO {
             preparedStatement.setString(1,user.getEmail());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getAddress());
-            preparedStatement.setInt(4, user.getPhone());
+            preparedStatement.setString(4, user.getPhone());
             preparedStatement.execute();
         } catch (NamingException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -23,6 +23,7 @@ public class Validation {
         }
         return result;
     }
+
     
     public static boolean isValidPassword(String password){
         try {

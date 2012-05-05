@@ -6,7 +6,6 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,26 +24,27 @@ import libraries.Validation;
     @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
     @NamedQuery(name = "Users.findByAddress", query = "SELECT u FROM Users u WHERE u.address = :address"),
     @NamedQuery(name = "Users.findByPhone", query = "SELECT u FROM Users u WHERE u.phone = :phone")})
-public class Users implements Serializable {
-
+public class  Users implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", nullable = false, length = 50)
     private String email;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false, length = 50)
     private String password;
     @Size(max = 300)
-    @Column(name = "ADDRESS")
+    @Column(name = "ADDRESS", length = 300)
     private String address;
-    @Column(name = "PHONE")
-    private Integer phone;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 30)
+    @Column(name = "PHONE", length = 30)
+    private String phone;
 
     public Users() {
     }
@@ -53,40 +53,37 @@ public class Users implements Serializable {
         this.email = email;
     }
 
-    public Users(String email, String password)throws IllegalArgumentException {
+    public Users(String email, String password) {
         this.setEmail(email);
         this.setPassword(password);
     }
     
-    public Users(String email,String password,String address,String phone)throws IllegalArgumentException, NumberFormatException{
+    public Users(String email,String password,String address,String phone){
         this.setEmail(email);
         this.setPassword(password);
-        this.setAddress(address);        
+        this.setAddress(address);
         this.setPhone(phone);
     }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)throws IllegalArgumentException {
-        if (Validation.isValidEmail(email)) {
-            this.email = email;
-        }else{
-            throw new IllegalArgumentException("Invalid Email address");
+    public void setEmail(String email) {
+        if(!Validation.isValidEmail(email)){
+            throw new IllegalArgumentException("Not a valid Email");
         }
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) throws IllegalArgumentException{
-        if (Validation.isValidPassword(password)){
-            this.password = password;
-        }else{
+    public void setPassword(String password) {
+        if(!Validation.isValidPassword(password)){
             throw new IllegalArgumentException("Password must be atleast 6 characters long");
         }
+        this.password = password;
     }
 
     public String getAddress() {
@@ -97,16 +94,12 @@ public class Users implements Serializable {
         this.address = address;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public void setPhone(String phone)throws NumberFormatException {
-        this.setPhone(Integer.parseInt(phone));
     }
 
     @Override
@@ -133,4 +126,5 @@ public class Users implements Serializable {
     public String toString() {
         return "model.Users[ email=" + email + " ]";
     }
+    
 }
